@@ -1,0 +1,58 @@
+package com.shawncurrie.techblogs.service.impl;
+
+import com.shawncurrie.techblogs.io.entity.BlogEntity;
+import com.shawncurrie.techblogs.io.entity.CompanyEntity;
+import com.shawncurrie.techblogs.io.repository.BlogRepository;
+import com.shawncurrie.techblogs.io.repository.CompanyRepository;
+import com.shawncurrie.techblogs.service.BlogService;
+import com.shawncurrie.techblogs.shared.dto.BlogDTO;
+import com.shawncurrie.techblogs.shared.dto.CompanyDTO;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class BlogServiceImpl implements BlogService {
+
+    @Autowired
+    BlogRepository blogRepository;
+
+    @Autowired
+    CompanyRepository companyRepository;
+
+    // TODO: figure out how to do OnToOne mappings instead of repeated DB calls. I hate this lol
+    @Override
+    public List<BlogDTO> getBlogs(int page, int limit) {
+        List<BlogDTO> returnValue = new ArrayList<>();
+        Map<Long, CompanyDTO> companyDetails = new HashMap<>();
+
+        Pageable pageableRequest = PageRequest.of(page, limit, Sort.by("id"));
+
+        Page<BlogEntity> blogPages = blogRepository.findAllByOrderByDateDesc(pageableRequest);
+        List<BlogEntity> blogs = blogPages.getContent();
+
+        ModelMapper modelMapper = new ModelMapper();
+        for(BlogEntity blogEntity: blogs) {
+            BlogDTO blog = modelMapper.map(blogEntity, BlogDTO.class);
+
+            if (!companyDetails.containsKey(blogEntity.getCompanyId())) {
+                CompanyEntity companyEntity = companyRepository.findById(blogEntity.getCompanyId());
+                CompanyDTO companyDTO = modelMapper.map(companyEntity, CompanyDTO.class);
+                companyDetails.put(companyDTO.getId(), companyDTO);
+            }
+            blog.setCompanyDTO(companyDetails.get(blogEntity.getCompanyId()));
+            returnValue.add(blog);
+        }
+
+        return returnValue;
+    }
+}
