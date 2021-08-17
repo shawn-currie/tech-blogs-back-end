@@ -1,7 +1,6 @@
 package com.shawncurrie.techblogs.ui.controller;
 
 import com.shawncurrie.techblogs.service.BlogService;
-import com.shawncurrie.techblogs.service.CompanyService;
 import com.shawncurrie.techblogs.shared.dto.BlogDTO;
 import com.shawncurrie.techblogs.ui.model.response.BlogRest;
 import org.modelmapper.ModelMapper;
@@ -22,14 +21,26 @@ public class BlogController {
     @CrossOrigin(origins = "*")
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public List<BlogRest> getBlogs(@RequestParam(value = "page", defaultValue = "0") int page,
-                                   @RequestParam(value = "limit", defaultValue = "20") int limit) {
-        List<BlogRest> returnValues = new ArrayList<>();
+                                   @RequestParam(value = "limit", defaultValue = "15") int limit,
+                                   @RequestParam(value = "companyId", defaultValue = "-1") long companyId) {
 
-        List<BlogDTO> blogs = blogService.getBlogs(page, limit);
+        List<BlogDTO> blogs;
+
+        if (companyId == -1) {
+            blogs = blogService.getBlogs(page, limit);
+        } else {
+            blogs = blogService.getBlogsByCompany(companyId, page, limit);
+        }
+
+        return mapBlogs(blogs);
+    }
+
+    private List<BlogRest> mapBlogs(List<BlogDTO> blogDTOS) {
+        List<BlogRest> returnValues = new ArrayList<>();
 
         ModelMapper modelMapper = new ModelMapper();
 
-        for (BlogDTO blogDTO : blogs) {
+        for (BlogDTO blogDTO : blogDTOS) {
             returnValues.add(modelMapper.map(blogDTO, BlogRest.class));
         }
 

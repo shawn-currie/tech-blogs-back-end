@@ -1,6 +1,8 @@
 package com.shawncurrie.techblogs.ui.model.response;
 
 // TODO: revise this to use the joined data
+//TODO: have company rest?
+
 public class BlogRest {
     private String title;
     private String url;

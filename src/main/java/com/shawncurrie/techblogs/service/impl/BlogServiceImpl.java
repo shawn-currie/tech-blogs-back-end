@@ -32,16 +32,31 @@ public class BlogServiceImpl implements BlogService {
     // TODO: figure out how to do OnToOne mappings instead of repeated DB calls. I hate this lol
     @Override
     public List<BlogDTO> getBlogs(int page, int limit) {
-        List<BlogDTO> returnValue = new ArrayList<>();
-        Map<Long, CompanyDTO> companyDetails = new HashMap<>();
 
+        // TODO: verify if sort is still needed
         Pageable pageableRequest = PageRequest.of(page, limit, Sort.by("id"));
-
         Page<BlogEntity> blogPages = blogRepository.findAllByOrderByDateDesc(pageableRequest);
         List<BlogEntity> blogs = blogPages.getContent();
 
+        return mapBlogsAndCompanies(blogs);
+    }
+
+    @Override
+    public List<BlogDTO> getBlogsByCompany(long companyId, int page, int limit) {
+
+        Pageable pageableRequest = PageRequest.of(page, limit, Sort.by("id"));
+        Page<BlogEntity> blogPages = blogRepository.findAllByCompanyId(companyId, pageableRequest);
+        List<BlogEntity> blogs = blogPages.getContent();
+
+        return mapBlogsAndCompanies(blogs);
+    }
+
+    private List<BlogDTO> mapBlogsAndCompanies(List<BlogEntity> blogEntities) {
+        List<BlogDTO> returnValue = new ArrayList<>();
+        Map<Long, CompanyDTO> companyDetails = new HashMap<>();
         ModelMapper modelMapper = new ModelMapper();
-        for(BlogEntity blogEntity: blogs) {
+
+        for(BlogEntity blogEntity: blogEntities) {
             BlogDTO blog = modelMapper.map(blogEntity, BlogDTO.class);
 
             if (!companyDetails.containsKey(blogEntity.getCompanyId())) {
