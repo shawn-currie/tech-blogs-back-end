@@ -49,17 +49,4 @@ public class CompanyController {
 
         return modelMapper.map(companyDTO, CompanyRest.class);
     }
-
-    @CrossOrigin("*")
-    @GetMapping(value = "/{companyId}/logo", produces = {MediaType.IMAGE_JPEG_VALUE})
-    public ResponseEntity<byte[]> getCompanyLogo(@PathVariable Long companyId) throws IOException {
-
-        var imgFile = new ClassPathResource("static/riotgames.jpg");
-        byte[] bytes = StreamUtils.copyToByteArray(imgFile.getInputStream());
-
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(bytes);
-    }
 }
