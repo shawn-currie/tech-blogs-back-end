@@ -1,17 +1,8 @@
 package com.shawncurrie.techblogs.ui.model.response;
 
 public class CompanyRest {
-    private long id;
     private String name;
     private String url;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

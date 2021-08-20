@@ -2,7 +2,9 @@ package com.shawncurrie.techblogs.ui.controller;
 
 import com.shawncurrie.techblogs.service.BlogService;
 import com.shawncurrie.techblogs.shared.dto.BlogDTO;
+import com.shawncurrie.techblogs.shared.dto.CompanyDTO;
 import com.shawncurrie.techblogs.ui.model.response.BlogRest;
+import com.shawncurrie.techblogs.ui.model.response.CompanyRest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -41,7 +43,11 @@ public class BlogController {
         ModelMapper modelMapper = new ModelMapper();
 
         for (BlogDTO blogDTO : blogDTOS) {
-            returnValues.add(modelMapper.map(blogDTO, BlogRest.class));
+            CompanyDTO companyDTO = blogDTO.getCompanyDTO();
+            BlogRest blogRest = modelMapper.map(blogDTO, BlogRest.class);
+            CompanyRest companyRest = modelMapper.map(companyDTO, CompanyRest.class);
+            blogRest.setCompany(companyRest);
+            returnValues.add(blogRest);
         }
 
         return returnValues;
