@@ -28,7 +28,7 @@ public class CompanyServiceImpl implements CompanyService {
 
         Pageable pageableRequest = PageRequest.of(page, limit);
 
-        Page<CompanyEntity> companyPages = companyRepository.findAll(pageableRequest);
+        Page<CompanyEntity> companyPages = companyRepository.findAllByOrderByNameAsc(pageableRequest);
         List<CompanyEntity> companies = companyPages.getContent();
 
         ModelMapper modelMapper = new ModelMapper();
