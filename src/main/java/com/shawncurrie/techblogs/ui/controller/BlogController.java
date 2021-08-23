@@ -24,7 +24,7 @@ public class BlogController {
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public List<BlogRest> getBlogs(@RequestParam(value = "page", defaultValue = "0") int page,
                                    @RequestParam(value = "limit", defaultValue = "15") int limit,
-                                   @RequestParam(value = "companyId", defaultValue = "-1") long companyId) {
+                                   @RequestParam(value = "companyId", defaultValue = "-1") int companyId) {
 
         List<BlogDTO> blogs;
 
@@ -33,6 +33,18 @@ public class BlogController {
         } else {
             blogs = blogService.getBlogsByCompany(companyId, page, limit);
         }
+
+        return mapBlogs(blogs);
+    }
+
+    // Page/Limit currently does nothing
+    @CrossOrigin(origins = "*")
+    @GetMapping(path = "/favorites/{user}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public List<BlogRest> getFavoriteBlogs(@PathVariable int user,
+                                   @RequestParam(value = "page", defaultValue = "0") int page,
+                                   @RequestParam(value = "limit", defaultValue = "15") int limit) {
+
+        List<BlogDTO> blogs = blogService.getFavoriteBlogs(user, page, limit);
 
         return mapBlogs(blogs);
     }

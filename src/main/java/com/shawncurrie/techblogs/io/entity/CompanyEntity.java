@@ -13,7 +13,7 @@ public class CompanyEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    private long id;
+    private int id;
 
     @Column(nullable = false, name="name")
     private String name;
@@ -21,11 +21,11 @@ public class CompanyEntity implements Serializable {
     @Column(nullable = false, name="url")
     private String url;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

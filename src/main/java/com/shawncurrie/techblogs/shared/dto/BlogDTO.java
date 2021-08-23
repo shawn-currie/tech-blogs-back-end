@@ -1,20 +1,18 @@
 package com.shawncurrie.techblogs.shared.dto;
 
-import com.shawncurrie.techblogs.io.entity.CompanyEntity;
-
 public class BlogDTO {
-    private long id;
+    private int id;
     private String title;
     private String url;
     private int companyId;
     private String date;
     private CompanyDTO companyDTO;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

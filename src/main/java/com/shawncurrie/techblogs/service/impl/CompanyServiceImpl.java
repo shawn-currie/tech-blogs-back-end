@@ -40,7 +40,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public CompanyDTO getCompany(long companyId) {
+    public CompanyDTO getCompany(int companyId) {
         CompanyEntity companyEntity = companyRepository.findById(companyId);
 
         ModelMapper modelMapper = new ModelMapper();

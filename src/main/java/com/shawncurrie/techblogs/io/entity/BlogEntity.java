@@ -11,7 +11,7 @@ public class BlogEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    private long id;
+    private int id;
 
     @Column(nullable = false, name="title")
     private String title;
@@ -20,16 +20,16 @@ public class BlogEntity implements Serializable {
     private String url;
 
     @Column(nullable = false, name="company_id")
-    private long companyId;
+    private int companyId;
 
     @Column(nullable = false, name="date")
     private String date;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -49,11 +49,11 @@ public class BlogEntity implements Serializable {
         this.url = url;
     }
 
-    public long getCompanyId() {
+    public int getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(long companyId) {
+    public void setCompanyId(int companyId) {
         this.companyId = companyId;
     }
 

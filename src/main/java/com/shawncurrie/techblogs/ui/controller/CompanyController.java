@@ -38,7 +38,7 @@ public class CompanyController {
 
     @CrossOrigin("*")
     @GetMapping(path="/{companyId}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public CompanyRest getCompany(@PathVariable Long companyId) {
+    public CompanyRest getCompany(@PathVariable int companyId) {
         CompanyDTO companyDTO = companyService.getCompany(companyId);
 
         ModelMapper modelMapper = new ModelMapper();

@@ -2,8 +2,10 @@ package com.shawncurrie.techblogs.service.impl;
 
 import com.shawncurrie.techblogs.io.entity.BlogEntity;
 import com.shawncurrie.techblogs.io.entity.CompanyEntity;
+import com.shawncurrie.techblogs.io.entity.FavoriteEntity;
 import com.shawncurrie.techblogs.io.repository.BlogRepository;
 import com.shawncurrie.techblogs.io.repository.CompanyRepository;
+import com.shawncurrie.techblogs.io.repository.FavoriteRepository;
 import com.shawncurrie.techblogs.service.BlogService;
 import com.shawncurrie.techblogs.shared.dto.BlogDTO;
 import com.shawncurrie.techblogs.shared.dto.CompanyDTO;
@@ -29,6 +31,9 @@ public class BlogServiceImpl implements BlogService {
     @Autowired
     CompanyRepository companyRepository;
 
+    @Autowired
+    FavoriteRepository favoriteRepository;
+
     // TODO: figure out how to do OnToOne mappings instead of repeated DB calls. I hate this lol
     @Override
     public List<BlogDTO> getBlogs(int page, int limit) {
@@ -42,7 +47,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<BlogDTO> getBlogsByCompany(long companyId, int page, int limit) {
+    public List<BlogDTO> getBlogsByCompany(int companyId, int page, int limit) {
 
         Pageable pageableRequest = PageRequest.of(page, limit, Sort.by("id"));
         Page<BlogEntity> blogPages = blogRepository.findAllByCompanyId(companyId, pageableRequest);
@@ -51,9 +56,27 @@ public class BlogServiceImpl implements BlogService {
         return mapBlogsAndCompanies(blogs);
     }
 
+    // TODO: get joins to work so I don't have to make 2 calls
+    @Override
+    public List<BlogDTO> getFavoriteBlogs(int user, int page, int limit) {
+
+        List<FavoriteEntity> favorites = favoriteRepository.findAllByUser(user);
+
+        List<Integer> blogIds = new ArrayList<>();
+        for (FavoriteEntity favoriteEntity : favorites) {
+            blogIds.add(favoriteEntity.getBlog());
+        }
+
+//        Page<BlogEntity> blogEntitiesPages = blogRepository.findByBlogIdIn(blogIds);
+//        List<BlogEntity> blogEntities = blogEntitiesPages.getContent();
+        List<BlogEntity> blogEntities = blogRepository.findByIdIn(blogIds);
+
+        return mapBlogsAndCompanies(blogEntities);
+    }
+
     private List<BlogDTO> mapBlogsAndCompanies(List<BlogEntity> blogEntities) {
         List<BlogDTO> returnValue = new ArrayList<>();
-        Map<Long, CompanyDTO> companyDetails = new HashMap<>();
+        Map<Integer, CompanyDTO> companyDetails = new HashMap<>();
         ModelMapper modelMapper = new ModelMapper();
 
         for(BlogEntity blogEntity: blogEntities) {
