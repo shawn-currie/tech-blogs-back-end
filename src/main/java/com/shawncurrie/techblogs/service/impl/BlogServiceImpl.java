@@ -57,18 +57,20 @@ public class BlogServiceImpl implements BlogService {
     }
 
     // TODO: get joins to work so I don't have to make 2 calls
+    // The ordering in this current system will get weird. When I have joins working I should sort by blog date
     @Override
     public List<BlogDTO> getFavoriteBlogs(int user, int page, int limit) {
 
-        List<FavoriteEntity> favorites = favoriteRepository.findAllByUser(user);
+        Pageable pageableRequest = PageRequest.of(page, limit);
+
+        Page<FavoriteEntity> favoritesPage = favoriteRepository.findAllByUser(user, pageableRequest);
+        List<FavoriteEntity> favorites = favoritesPage.getContent();
 
         List<Integer> blogIds = new ArrayList<>();
         for (FavoriteEntity favoriteEntity : favorites) {
             blogIds.add(favoriteEntity.getBlog());
         }
 
-//        Page<BlogEntity> blogEntitiesPages = blogRepository.findByBlogIdIn(blogIds);
-//        List<BlogEntity> blogEntities = blogEntitiesPages.getContent();
         List<BlogEntity> blogEntities = blogRepository.findByIdIn(blogIds);
 
         return mapBlogsAndCompanies(blogEntities);

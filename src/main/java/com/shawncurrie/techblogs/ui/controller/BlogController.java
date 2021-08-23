@@ -36,8 +36,7 @@ public class BlogController {
 
         return mapBlogs(blogs);
     }
-
-    // Page/Limit currently does nothing
+    
     @CrossOrigin(origins = "*")
     @GetMapping(path = "/favorites/{user}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public List<BlogRest> getFavoriteBlogs(@PathVariable int user,
