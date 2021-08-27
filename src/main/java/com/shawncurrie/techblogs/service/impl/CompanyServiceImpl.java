@@ -1,10 +1,8 @@
 package com.shawncurrie.techblogs.service.impl;
 
-import com.shawncurrie.techblogs.io.entity.BlogEntity;
 import com.shawncurrie.techblogs.io.entity.CompanyEntity;
 import com.shawncurrie.techblogs.io.repository.CompanyRepository;
 import com.shawncurrie.techblogs.service.CompanyService;
-import com.shawncurrie.techblogs.shared.dto.BlogDTO;
 import com.shawncurrie.techblogs.shared.dto.CompanyDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

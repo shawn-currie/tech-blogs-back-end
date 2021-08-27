@@ -4,7 +4,8 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 
-@Entity(name = "favorites")
+@Entity()
+@Table(name = "favorites")
 public class FavoriteEntity  implements Serializable {
     @Serial
     private static final long serialVersionUID = 4327894732894792L;

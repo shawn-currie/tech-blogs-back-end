@@ -3,18 +3,20 @@ package com.shawncurrie.techblogs.service.impl;
 import com.shawncurrie.techblogs.io.entity.BlogEntity;
 import com.shawncurrie.techblogs.io.entity.CompanyEntity;
 import com.shawncurrie.techblogs.io.entity.FavoriteEntity;
+import com.shawncurrie.techblogs.io.entity.UserEntity;
 import com.shawncurrie.techblogs.io.repository.BlogRepository;
 import com.shawncurrie.techblogs.io.repository.CompanyRepository;
 import com.shawncurrie.techblogs.io.repository.FavoriteRepository;
-import com.shawncurrie.techblogs.service.BlogService;
+import com.shawncurrie.techblogs.io.repository.UserRepository;
+import com.shawncurrie.techblogs.service.UserService;
 import com.shawncurrie.techblogs.shared.dto.BlogDTO;
 import com.shawncurrie.techblogs.shared.dto.CompanyDTO;
+import com.shawncurrie.techblogs.shared.dto.UserDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,51 +25,40 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class BlogServiceImpl implements BlogService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
-    BlogRepository blogRepository;
+    UserRepository userRepository;
 
     @Autowired
     FavoriteRepository favoriteRepository;
 
     @Autowired
+    BlogRepository blogRepository;
+
+    @Autowired
     CompanyRepository companyRepository;
 
-    // TODO: figure out how to do OnToOne mappings instead of repeated DB calls. I hate this lol
     @Override
-    public List<BlogDTO> getBlogs(int page, int limit) {
+    public UserDTO getUser(int id) {
+        UserEntity userEntity = userRepository.findById(id);
 
-        // TODO: verify if sort is still needed
-        Pageable pageableRequest = PageRequest.of(page, limit, Sort.by("id"));
-        Page<BlogEntity> blogPages = blogRepository.findAllByOrderByDateDesc(pageableRequest);
-        List<BlogEntity> blogs = blogPages.getContent();
+        ModelMapper modelMapper = new ModelMapper();
 
-        return mapBlogsAndCompanies(blogs);
+        return modelMapper.map(userEntity, UserDTO.class);
     }
 
     @Override
-    public List<BlogDTO> getBlogsByCompany(int companyId, int page, int limit) {
+    public List<BlogDTO> getFavoriteBlogs(int userId, int page, int limit) {
 
-        Pageable pageableRequest = PageRequest.of(page, limit, Sort.by("id"));
-        Page<BlogEntity> blogPages = blogRepository.findAllByCompanyId(companyId, pageableRequest);
-        List<BlogEntity> blogs = blogPages.getContent();
+        Pageable pageable = PageRequest.of(page, limit);
 
-        return mapBlogsAndCompanies(blogs);
-    }
-
-    // TODO: get joins to work so I don't have to make 2 calls
-    // The ordering in this current system will get weird. When I have joins working I should sort by blog date
-    @Override
-    public List<BlogDTO> getFavoriteBlogs(int user, int page, int limit) {
-
-        Pageable pageableRequest = PageRequest.of(page, limit);
-
-        Page<FavoriteEntity> favoritesPage = favoriteRepository.findAllByUser(user, pageableRequest);
-        List<FavoriteEntity> favorites = favoritesPage.getContent();
+        Page<FavoriteEntity> favoriteEntitiesPage = favoriteRepository.findAllByUser(userId, pageable);
+        List<FavoriteEntity> favoriteEntitiesList = favoriteEntitiesPage.getContent();
 
         List<Integer> blogIds = new ArrayList<>();
-        for (FavoriteEntity favoriteEntity : favorites) {
+
+        for (FavoriteEntity favoriteEntity : favoriteEntitiesList) {
             blogIds.add(favoriteEntity.getBlog());
         }
 

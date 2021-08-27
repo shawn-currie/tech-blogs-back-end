@@ -36,17 +36,6 @@ public class BlogController {
 
         return mapBlogs(blogs);
     }
-    
-    @CrossOrigin(origins = "*")
-    @GetMapping(path = "/favorites/{user}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public List<BlogRest> getFavoriteBlogs(@PathVariable int user,
-                                   @RequestParam(value = "page", defaultValue = "0") int page,
-                                   @RequestParam(value = "limit", defaultValue = "15") int limit) {
-
-        List<BlogDTO> blogs = blogService.getFavoriteBlogs(user, page, limit);
-
-        return mapBlogs(blogs);
-    }
 
     private List<BlogRest> mapBlogs(List<BlogDTO> blogDTOS) {
         List<BlogRest> returnValues = new ArrayList<>();
