@@ -49,4 +49,21 @@ public class UserController {
 
         return results;
     }
+
+    @CrossOrigin("*")
+    @PostMapping(path = "/{userId}/favorites/{blogId}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public void addFavorite(@PathVariable int userId, @PathVariable int blogId) {
+
+        userService.addFavoriteBlog(userId, blogId);
+
+    }
+
+
+    @CrossOrigin("*")
+    @DeleteMapping(path = "/{userId}/favorites/{blogId}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public void removeFavorite(@PathVariable int userId, @PathVariable int blogId) {
+
+        userService.removeFavoriteBlog(userId, blogId);
+
+    }
 }

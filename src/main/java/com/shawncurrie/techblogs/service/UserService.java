@@ -8,4 +8,6 @@ import java.util.List;
 public interface UserService {
     UserDTO getUser(int id);
     List<BlogDTO> getFavoriteBlogs(int userId, int page, int limit);
+    void addFavoriteBlog(int user, int blog);
+    void removeFavoriteBlog(int user, int blog);
 }

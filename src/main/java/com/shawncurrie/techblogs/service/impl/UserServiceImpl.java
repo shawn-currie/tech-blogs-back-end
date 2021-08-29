@@ -1,9 +1,6 @@
 package com.shawncurrie.techblogs.service.impl;
 
-import com.shawncurrie.techblogs.io.entity.BlogEntity;
-import com.shawncurrie.techblogs.io.entity.CompanyEntity;
-import com.shawncurrie.techblogs.io.entity.FavoriteEntity;
-import com.shawncurrie.techblogs.io.entity.UserEntity;
+import com.shawncurrie.techblogs.io.entity.*;
 import com.shawncurrie.techblogs.io.repository.BlogRepository;
 import com.shawncurrie.techblogs.io.repository.CompanyRepository;
 import com.shawncurrie.techblogs.io.repository.FavoriteRepository;
@@ -65,6 +62,29 @@ public class UserServiceImpl implements UserService {
         List<BlogEntity> blogEntities = blogRepository.findByIdIn(blogIds);
 
         return mapBlogsAndCompanies(blogEntities);
+    }
+
+    @Override
+    public void addFavoriteBlog(int user, int blog) {
+        if (favoriteRepository.findByUserAndBlog(user, blog) != null) {
+            System.out.println("blog already exists");
+            return;
+        }
+
+        FavoriteEntity favoriteEntity = new FavoriteEntity(user, blog);
+
+        favoriteRepository.save(favoriteEntity);
+    }
+
+    @Override
+    public void removeFavoriteBlog(int user, int blog) {
+        FavoriteEntity favoriteEntity = favoriteRepository.findByUserAndBlog(user, blog);
+
+        if (favoriteEntity == null) {
+            return;
+        }
+
+        favoriteRepository.delete(favoriteEntity);
     }
 
     // temporary until JPA is working

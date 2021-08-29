@@ -6,26 +6,23 @@ import java.io.Serializable;
 
 @Entity()
 @Table(name = "favorites")
+@IdClass(FavoriteId.class)
 public class FavoriteEntity  implements Serializable {
     @Serial
     private static final long serialVersionUID = 4327894732894792L;
 
     @Id
-    @GeneratedValue
-    private int id;
-
-    @Column(nullable = false, name="user")
     private int user;
 
-    @Column(nullable = false, name="blog")
+    @Id
     private int blog;
 
-    public int getId() {
-        return id;
+    public FavoriteEntity(int user, int blog) {
+        this.user = user;
+        this.blog = blog;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public FavoriteEntity() {
     }
 
     public int getUser() {

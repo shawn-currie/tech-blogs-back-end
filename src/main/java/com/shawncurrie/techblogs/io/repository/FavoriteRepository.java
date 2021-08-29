@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FavoriteRepository extends PagingAndSortingRepository<FavoriteEntity, Integer> {
     Page<FavoriteEntity> findAllByUser(int user, Pageable pageable);
+    FavoriteEntity findByUserAndBlog(int user, int blog);
 }
