@@ -44,6 +44,7 @@ public class UserController {
         ModelMapper modelMapper = new ModelMapper();
 
         for (BlogDTO blogDTO : blogDTOS) {
+            blogDTO.setFavorite(true);
             results.add(modelMapper.map(blogDTO, BlogRest.class));
         }
 
