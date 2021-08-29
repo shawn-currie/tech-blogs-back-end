@@ -16,10 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -85,6 +82,30 @@ public class UserServiceImpl implements UserService {
         }
 
         favoriteRepository.delete(favoriteEntity);
+    }
+
+    @Override
+    public void updateFavoriteStatus(int userId, List<BlogDTO> blogs) {
+
+        List<Integer> blogIds = new ArrayList<>();
+
+        for (BlogDTO blogDTO : blogs) {
+            blogIds.add(blogDTO.getId());
+        }
+
+        List<FavoriteEntity> favoriteEntities = favoriteRepository.findByUserAndBlogIn(userId, blogIds);
+
+        Set<Integer> favoriteBlogIds = new HashSet<>();
+
+        for (FavoriteEntity favoriteEntity : favoriteEntities) {
+            favoriteBlogIds.add(favoriteEntity.getBlog());
+        }
+
+        for (BlogDTO blogDTO : blogs) {
+            if (favoriteBlogIds.contains(blogDTO.getId())) {
+                blogDTO.setFavorite(true);
+            }
+        }
     }
 
     // temporary until JPA is working

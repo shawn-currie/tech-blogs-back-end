@@ -6,6 +6,7 @@ public class BlogDTO {
     private String url;
     private int companyId;
     private String date;
+    private boolean favorite;
     private CompanyDTO companyDTO;
 
     public int getId() {
@@ -46,6 +47,14 @@ public class BlogDTO {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 
     public CompanyDTO getCompanyDTO() {

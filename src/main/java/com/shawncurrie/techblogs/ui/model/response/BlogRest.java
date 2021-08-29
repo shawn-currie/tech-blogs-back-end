@@ -5,6 +5,7 @@ public class BlogRest {
     private String title;
     private String url;
     private String date;
+    private boolean favorite;
     private CompanyRest company;
 
     public int getId() {
@@ -37,6 +38,14 @@ public class BlogRest {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 
     public CompanyRest getCompany() {

@@ -1,6 +1,7 @@
 package com.shawncurrie.techblogs.ui.controller;
 
 import com.shawncurrie.techblogs.service.BlogService;
+import com.shawncurrie.techblogs.service.UserService;
 import com.shawncurrie.techblogs.shared.dto.BlogDTO;
 import com.shawncurrie.techblogs.shared.dto.CompanyDTO;
 import com.shawncurrie.techblogs.ui.model.response.BlogRest;
@@ -20,6 +21,9 @@ public class BlogController {
     @Autowired
     BlogService blogService;
 
+    @Autowired
+    UserService userService;
+
     @CrossOrigin(origins = "*")
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public List<BlogRest> getBlogs(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -33,6 +37,8 @@ public class BlogController {
         } else {
             blogs = blogService.getBlogsByCompany(companyId, page, limit);
         }
+
+        userService.updateFavoriteStatus(1, blogs);
 
         return mapBlogs(blogs);
     }
