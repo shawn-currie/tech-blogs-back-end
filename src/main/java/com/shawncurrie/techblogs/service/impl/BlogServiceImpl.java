@@ -34,7 +34,7 @@ public class BlogServiceImpl implements BlogService {
     @Autowired
     CompanyRepository companyRepository;
 
-    // TODO: figure out how to do OnToOne mappings instead of repeated DB calls. I hate this lol
+    // figure out how to do OnToOne mappings instead of repeated DB calls
     @Override
     public List<BlogDTO> getBlogs(int page, int limit) {
 
@@ -54,26 +54,6 @@ public class BlogServiceImpl implements BlogService {
         List<BlogEntity> blogs = blogPages.getContent();
 
         return mapBlogsAndCompanies(blogs);
-    }
-
-    // TODO: get joins to work so I don't have to make 2 calls
-    // The ordering in this current system will get weird. When I have joins working I should sort by blog date
-    @Override
-    public List<BlogDTO> getFavoriteBlogs(int user, int page, int limit) {
-
-        Pageable pageableRequest = PageRequest.of(page, limit);
-
-        Page<FavoriteEntity> favoritesPage = favoriteRepository.findAllByUserOrderByDateDesc(user, pageableRequest);
-        List<FavoriteEntity> favorites = favoritesPage.getContent();
-
-        List<Integer> blogIds = new ArrayList<>();
-        for (FavoriteEntity favoriteEntity : favorites) {
-            blogIds.add(favoriteEntity.getBlog());
-        }
-
-        List<BlogEntity> blogEntities = blogRepository.findByIdIn(blogIds);
-
-        return mapBlogsAndCompanies(blogEntities);
     }
 
     // temporary until JPA is working

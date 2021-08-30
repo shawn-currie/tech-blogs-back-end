@@ -11,7 +11,6 @@ import java.util.List;
 
 @Repository
 public interface BlogRepository extends PagingAndSortingRepository<BlogEntity, Integer> {
-    BlogEntity findById(int id);
     Page<BlogEntity> findAllByCompanyId(int companyId, Pageable pageable);
     Page<BlogEntity> findAllByOrderByDateDesc(Pageable pageable);
     List<BlogEntity> findByIdIn(List<Integer> id);
