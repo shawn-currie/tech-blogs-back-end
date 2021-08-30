@@ -63,7 +63,7 @@ public class BlogServiceImpl implements BlogService {
 
         Pageable pageableRequest = PageRequest.of(page, limit);
 
-        Page<FavoriteEntity> favoritesPage = favoriteRepository.findAllByUser(user, pageableRequest);
+        Page<FavoriteEntity> favoritesPage = favoriteRepository.findAllByUserOrderByDateDesc(user, pageableRequest);
         List<FavoriteEntity> favorites = favoritesPage.getContent();
 
         List<Integer> blogIds = new ArrayList<>();

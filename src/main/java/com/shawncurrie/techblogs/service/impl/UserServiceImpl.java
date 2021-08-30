@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -45,20 +46,32 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<BlogDTO> getFavoriteBlogs(int userId, int page, int limit) {
 
-        Pageable pageable = PageRequest.of(page, limit);
+        Pageable pageable = PageRequest.of(page, limit, Sort.by("blog"));
 
-        Page<FavoriteEntity> favoriteEntitiesPage = favoriteRepository.findAllByUser(userId, pageable);
+        Page<FavoriteEntity> favoriteEntitiesPage = favoriteRepository.findAllByUserOrderByDateDesc(userId, pageable);
         List<FavoriteEntity> favoriteEntitiesList = favoriteEntitiesPage.getContent();
 
-        List<Integer> blogIds = new ArrayList<>();
+        List<Integer> favortieBlogIds = new ArrayList<>();
 
         for (FavoriteEntity favoriteEntity : favoriteEntitiesList) {
-            blogIds.add(favoriteEntity.getBlog());
+            favortieBlogIds.add(favoriteEntity.getBlog());
         }
 
-        List<BlogEntity> blogEntities = blogRepository.findByIdIn(blogIds);
+        List<BlogEntity> blogEntities = blogRepository.findByIdIn(favortieBlogIds);
 
-        return mapBlogsAndCompanies(blogEntities);
+        Map<Integer, BlogEntity> blogIdMapping = new HashMap<>();
+
+        for (BlogEntity blogEntity : blogEntities) {
+            blogIdMapping.put(blogEntity.getId(), blogEntity);
+        }
+
+        List<BlogEntity> orderedBlogs = new ArrayList<>();
+
+        for (Integer blogId : favortieBlogIds) {
+            orderedBlogs.add(blogIdMapping.get(blogId));
+        }
+
+        return mapBlogsAndCompanies(orderedBlogs);
     }
 
     @Override

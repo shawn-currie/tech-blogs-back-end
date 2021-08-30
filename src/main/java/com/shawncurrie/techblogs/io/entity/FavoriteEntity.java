@@ -3,6 +3,7 @@ package com.shawncurrie.techblogs.io.entity;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity()
 @Table(name = "favorites")
@@ -17,9 +18,13 @@ public class FavoriteEntity  implements Serializable {
     @Id
     private int blog;
 
+    @Column(nullable = false, name = "date")
+    private String date;
+
     public FavoriteEntity(int user, int blog) {
         this.user = user;
         this.blog = blog;
+        this.setDate(LocalDateTime.now().toString());
     }
 
     public FavoriteEntity() {
@@ -41,4 +46,11 @@ public class FavoriteEntity  implements Serializable {
         this.blog = blog;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }
