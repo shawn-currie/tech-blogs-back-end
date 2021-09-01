@@ -1,5 +1,6 @@
 package com.shawncurrie.techblogs.service.impl;
 
+import com.shawncurrie.techblogs.exceptions.UserServiceException;
 import com.shawncurrie.techblogs.io.entity.*;
 import com.shawncurrie.techblogs.io.repository.BlogRepository;
 import com.shawncurrie.techblogs.io.repository.CompanyRepository;
@@ -9,6 +10,7 @@ import com.shawncurrie.techblogs.service.UserService;
 import com.shawncurrie.techblogs.shared.dto.BlogDTO;
 import com.shawncurrie.techblogs.shared.dto.CompanyDTO;
 import com.shawncurrie.techblogs.shared.dto.UserDTO;
+import com.shawncurrie.techblogs.ui.model.response.ErrorMessages;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -77,8 +79,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addFavoriteBlog(int user, int blog) {
         if (favoriteRepository.findByUserAndBlog(user, blog) != null) {
-            System.out.println("blog already exists");
-            return;
+            throw new UserServiceException(ErrorMessages.RECORD_ALREADY_EXISTS.getErrorMessage());
         }
 
         FavoriteEntity favoriteEntity = new FavoriteEntity(user, blog);
