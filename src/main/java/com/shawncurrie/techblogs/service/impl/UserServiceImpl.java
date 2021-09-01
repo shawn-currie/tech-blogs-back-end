@@ -53,13 +53,13 @@ public class UserServiceImpl implements UserService {
         Page<FavoriteEntity> favoriteEntitiesPage = favoriteRepository.findAllByUserOrderByDateDesc(userId, pageable);
         List<FavoriteEntity> favoriteEntitiesList = favoriteEntitiesPage.getContent();
 
-        List<Integer> favortieBlogIds = new ArrayList<>();
+        List<Integer> favoriteBlogIds = new ArrayList<>();
 
         for (FavoriteEntity favoriteEntity : favoriteEntitiesList) {
-            favortieBlogIds.add(favoriteEntity.getBlog());
+            favoriteBlogIds.add(favoriteEntity.getBlog());
         }
 
-        List<BlogEntity> blogEntities = blogRepository.findByIdIn(favortieBlogIds);
+        List<BlogEntity> blogEntities = blogRepository.findByIdIn(favoriteBlogIds);
 
         Map<Integer, BlogEntity> blogIdMapping = new HashMap<>();
 
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
         List<BlogEntity> orderedBlogs = new ArrayList<>();
 
-        for (Integer blogId : favortieBlogIds) {
+        for (Integer blogId : favoriteBlogIds) {
             orderedBlogs.add(blogIdMapping.get(blogId));
         }
 
